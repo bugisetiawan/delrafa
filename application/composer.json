@@ -1,0 +1,11 @@
+{
+    "config": {
+        "platform": {
+            "php": "7.3"
+        }
+    },
+    "require": {
+        "phpoffice/phpspreadsheet": "^1.16",
+        "mpdf/mpdf": "^8.0"
+    }
+}
