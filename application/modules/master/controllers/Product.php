@@ -2453,14 +2453,14 @@ class Product extends System_Controller
 						];
 						$purchase_invoice_detail = $this->crud->get_where('purchase_invoice_detail', $where_purchase_invoice_detail)->row_array();
 						$subtotal = $purchase_invoice_detail['total'];
-						$disc_p = explode(',', $purchase_invoice_detail['disc_product']);
-						if($disc_p != null && $disc_p != "" )
-						{
-							foreach($disc_p AS $info_disc_p)
-							{
-								$subtotal = $subtotal - ($subtotal*-$info_disc_p/100);
-							}
-						}
+						// $disc_p = explode(',', $purchase_invoice_detail['disc_product']);
+						// if($disc_p != null && $disc_p != "" )
+						// {
+						// 	foreach($disc_p AS $info_disc_p)
+						// 	{
+						// 		$subtotal = $subtotal - ($subtotal*-$info_disc_p/100);
+						// 	}
+						// }
 						$price = $subtotal/($purchase_invoice_detail['qty']*$purchase_invoice_detail['unit_value']);
 						$this->crud->update('stock_movement', ['price' => $price], ['id' => $stock_movement_id]);
 					}
@@ -2505,7 +2505,9 @@ class Product extends System_Controller
 						];
 						$purchase_invoice_detail = $this->crud->get_where('purchase_invoice_detail', $where_purchase_invoice_detail)->row_array();
 						$price = $purchase_invoice_detail['total']/($purchase_invoice_detail['qty']*$purchase_invoice_detail['unit_value']);
-						$this->crud->update('stock_movement', ['price' => $price], ['id' => $stock_movement['id']]);
+						$qty = $purchase_invoice_detail['qty']*$purchase_invoice_detail['unit_value'];
+						$this->crud->update('stock_card', ['qty' => $qty], ['id' => $info_stock_card['id']]);
+						$this->crud->update('stock_movement', ['qty' => $qty, 'price' => $price], ['id' => $stock_movement['id']]);
 					}
 					elseif($info_stock_card['type'] == 7)
 					{

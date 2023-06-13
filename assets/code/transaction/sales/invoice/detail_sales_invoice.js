@@ -161,8 +161,7 @@ $(document).ready(function(){
 					},
 					success		: (data) => {						
 						if(data.status.code	== 200) 
-						{	
-							window.open('transaction/Sales/print_sales_invoice_do/'+data.sales_invoice_id, 'Print DO', 'left=300, top=100, width=800, height=500');
+						{								
 							location.reload();
 						}
 						else 

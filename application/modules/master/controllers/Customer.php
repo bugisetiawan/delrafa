@@ -61,6 +61,35 @@ class Customer extends System_Controller {
   	}  
   
     // CREATE
+    public function check_code()
+    {
+        if($this->input->is_ajax_request())
+		{
+            $where = array(
+                'code' => 'CUST-'.strtoupper($this->input->post('code')),
+            );
+            $data = $this->crud->get_where('customer', $where);
+            if($data->num_rows() > 0)
+            {
+                $response = array(
+                    'result' => 1
+                );
+            }
+            else
+            {
+                $response = array(
+                    'result' => 0
+                );
+    
+            }
+			echo json_encode($response);
+		}
+		else
+		{
+			$this->load->view('auth/show_404');
+		}
+    }
+    
     public function add()
     {
         if($this->system->check_access('customer', 'C'))

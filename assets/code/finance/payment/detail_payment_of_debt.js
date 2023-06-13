@@ -17,12 +17,12 @@ $(document).ready(function(){
 	var link_update_payment_of_debt;
 	$('#update_pod_btn').click(function(){
 		link_update_payment_of_debt = $(this).data('link');
-		$('#verifypassword').val(null); $('#module_url').val('payment/debt'); $('#action_module').val('update');
+		$('#verifypassword').val(null); $('#module_url').val('payment/debt'); $('#action_module').val('U');
 		$('#verify_module_password_modal').modal('show');
 	});
 
 	$("#delete_pod_btn").on('click', function(){
-		$('#verifypassword').val(null); $('#module_url').val('payment/debt'); $('#action_module').val('delete');
+		$('#verifypassword').val(null); $('#module_url').val('payment/debt'); $('#action_module').val('D');
 		var message = "<p>Yakin untuk menghapus data? Seluruh transaksi yang terkait akan mengalami perubahan</p>";
 		$('#veryfy_message').html(message);
 		$('#verify_module_password_modal').modal('show');

@@ -255,7 +255,7 @@
                                                 <?php $warehouses = $this->sales->get_warehouse($info['code_p'], $info['id_u']); ?>
                                                 <select class="form-control warehouse" name="warehouse_id" required>
                                                     <?php foreach($warehouses As $warehouse): ?>
-														<?php if($warehouse['stock'] > 0):?>
+														<?php if($warehouse['stock'] >= 0):?>
                                                         	<option value="<?php echo $warehouse['id_w']; ?>" <?php if($info['id_w'] == $warehouse['id_w']) { echo 'selected'; } ?>><?php echo $warehouse['code_w']." | ".number_format($warehouse['stock'], 2, '.', ','); ?></option>
 														<?php else: ?>
 															<?php continue; ?>
@@ -513,7 +513,7 @@
                     <div class="kt-form__actions">
                         <div class="row">
                             <div class="col-md-6">
-                                <a href="<?php echo base_url('sales'); ?>" class="btn btn-danger btn-brand btn-elevate-hover btn-square form-control"><i class="fa fa-times"></i>BATAL</a>                                        
+                                <a href="<?php echo base_url('sales/invoice'); ?>" class="btn btn-danger btn-brand btn-elevate-hover btn-square form-control"><i class="fa fa-times"></i>BATAL</a>                                        
                             </div>
                             <div class="col-md-6">
                                 <button type="submit" id="btn_save" class="btn btn-success btn-brand btn-elevate-hover btn-square form-control"><i class="fa fa-save"></i> SIMPAN</button>

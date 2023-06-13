@@ -1,4 +1,44 @@
-$(document).ready(function(){				
+$(document).ready(function(){	
+	$('#code').on('keyup', function(){        
+        $(this).val($(this).val().toUpperCase().replace(/\s+/g, ''));        
+        var length = $(this).val().length;
+        if(length == 5)
+        {
+            $.ajax({
+                type: "POST", 
+                url: 'master/Customer/check_code/',
+                data: {
+                    code : $(this).val(),
+                }, 
+                dataType: "json",
+                beforeSend: function(e) {
+                    if(e && e.overrideMimeType) {
+                        e.overrideMimeType("application/json;charset=UTF-8");
+                    }
+                },
+                success: function(response){                 
+                    if(response.result == 1){
+                        $("#code_customer_message").text("Mohon Maaf, Kode Pelanggan sudah digunakan. Silahkan gunakan yang lain, terima kasih");
+                        $('#btn_save').prop("disabled", true);
+                    }
+                    else
+                    {                    
+                        $("#code_customer_message").text(null);
+                        $('#btn_save').prop("disabled", false);
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+                }
+            });
+        }
+        else
+        {            
+            $("#code_customer_message").text("Mohon Maaf, Kode Pelanggan wajib 5 angka");
+            $('#btn_save').prop("disabled", true);                        
+        }        
+    });
+				
 	jQuery('#name, #address, #contact').keyup(function() {
 		$(this).val($(this).val().toUpperCase());
 	});

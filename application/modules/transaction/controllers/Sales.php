@@ -361,7 +361,7 @@ class Sales extends System_Controller
 			$option		= '';		
 			foreach($warehouse as $data)
 			{
-				if($data['stock'] > 0)
+				if($data['stock'] >= 0)
 				{
 					if($data['default']==1)
 					{
@@ -3742,126 +3742,6 @@ class Sales extends System_Controller
 			$this->load->view('auth/show_404');
 		}								
 	}
-	
-	// DELETE SALES INVOICE ORIGINAL
-	// public function delete_sales_invoice_original()
-	// {
-	// 	if($this->input->is_ajax_request())
-	// 	{
-	// 		$this->session->unset_userdata('verifypassword');
-	// 		$post 		 = $this->input->post();
-	// 		$sales_invoice = $this->sales->get_detail_sales_invoice($post['sales_invoice_id']);
-	// 		$sales_invoice_detail = $this->sales->get_detail_sales_invoice_detail($sales_invoice['id']);
-	// 		foreach($sales_invoice_detail AS $info_sales_invoice)
-	// 		{					
-	// 			// ADD STOCK
-	// 			$where_stock = [
-	// 				'product_code'	=> $info_sales_invoice['product_code'],
-	// 				'warehouse_id'	=> $info_sales_invoice['warehouse_id']
-	// 			];
-	// 			$stock = $this->crud->get_where('stock', $where_stock)->row_array();
-	// 			$update_stock = [
-	// 				'qty' => $stock['qty'] + ($info_sales_invoice['qty']*$info_sales_invoice['unit_value'])
-	// 			];
-	// 			$this->crud->update('stock', $update_stock, $where_stock);
-
-	// 			// UPDATE AND DELETE STOCK CARD
-	// 			$where_stock_card = [
-	// 				'transaction_id' => $sales_invoice['id'],
-	// 				'product_code'	 => $info_sales_invoice['product_code'],
-	// 				'type'			 => 4,
-	// 				'method'		 => 2,
-	// 				'warehouse_id'	 => $info_sales_invoice['warehouse_id']
-	// 			];								
-	// 			$stock_card = $this->crud->get_where('stock_card', $where_stock_card)->row_array();
-	// 			$where_after_stock_card = [
-	// 				'id >'          => $stock_card['id'],
-	// 				'product_code'	=> $info_sales_invoice['product_code'],
-	// 				'warehouse_id'	=> $info_sales_invoice['warehouse_id'],
-	// 				'deleted'		=> 0
-	// 			];
-	// 			$after_stock_cards = $this->db->select('id, stock')->from('stock_card')->where($where_after_stock_card)->order_by('stock_card.id', 'ASC')->get()->result_array();
-	// 			foreach($after_stock_cards AS $info_stock_card)
-	// 			{
-	// 				$update_stock_card = [
-	// 					'stock' => $info_stock_card['stock'] + ($info_sales_invoice['qty']*$info_sales_invoice['unit_value'])
-	// 				];
-	// 				$this->crud->update('stock_card', $update_stock_card, ['id' => $info_stock_card['id']]);
-	// 			}
-	// 			$this->crud->delete('stock_card', ['id' => $stock_card['id']]);
-
-	// 			// DELETE SALES INVOICE DETAIL ID
-	// 			$where_sales_invoice_detail = [
-	// 				'id'	=> $info_sales_invoice['id']
-	// 			];
-	// 			$this->crud->delete('sales_invoice_detail', $where_sales_invoice_detail);
-	// 		}
-	// 		// DELETE CASH LEDGER
-	// 		$where_cash_ledger = [
-	// 			'transaction_type'=> 5,
-	// 			'transaction_id'  => $sales_invoice['id'],
-	// 			'invoice'		  => $sales_invoice['invoice']
-	// 		];
-	// 		$cash_ledger = $this->crud->get_where('cash_ledger', $where_cash_ledger)->result_array();
-	// 		if($cash_ledger)
-	// 		{
-	// 			foreach($cash_ledger AS $info_cash_ledger)
-	// 			{
-	// 				$where_after_balance = [
-	// 					'cl_type'    => $info_cash_ledger['cl_type'],
-	// 					'account_id' => $info_cash_ledger['account_id'],
-	// 					'date >='    => $info_cash_ledger['date'],                
-	// 					'deleted'    => 0
-	// 				];
-	// 				$data   = $this->db->select('*')->from('cash_ledger')->where($where_after_balance)->order_by('date', 'asc')->order_by('id', 'asc')->get()->result_array();
-	// 				foreach($data AS $info)
-	// 				{
-	// 					if($info['date'] == $info_cash_ledger['date'] && $info['id'] < $info_cash_ledger['id'])
-	// 					{
-	// 						continue;
-	// 					}
-	// 					else
-	// 					{
-	// 						if($info_cash_ledger['method'] == 1) //1:DEBIT (IN), 2:CREDIT (OUT)
-	// 						{
-	// 							$balance = $info['balance'] - $info_cash_ledger['amount'];
-	// 						}
-	// 						else
-	// 						{
-	// 							$balance = $info['balance'] + $info_cash_ledger['amount'];
-	// 						}
-	// 						$this->crud->update('cash_ledger', ['balance' => $balance], ['id' => $info['id']]);
-	// 					}
-	// 				}
-	// 				$this->crud->delete_by_id('cash_ledger', $info_cash_ledger['id']);
-	// 			}
-	// 		}
-	// 		// DELETE SALES INVOICE
-	// 		$this->crud->delete('sales_invoice', ['id' => $sales_invoice['id']]);
-	// 		$data_activity = [
-	// 			'information' => 'MENGHAPUS PENJUALAN',
-	// 			'method'      => 5, // 1:READ, 2:DETAIL, 3:CREATE, 4:UPDATE, 5:DELETE, 6:PRINTOUT
-	// 			'code_e'      => $this->session->userdata('code_e'),
-	// 			'name_e'      => $this->session->userdata('name_e'),
-	// 			'user_id'     => $this->session->userdata('id_u')
-	// 		];						
-	// 		$this->crud->insert('activity', $data_activity);
-
-	// 		$response   =   [
-	// 			'status'    => [
-	// 				'code'      => 200,
-	// 				'message'   => 'Berhasil',
-	// 			],
-	// 			'response'  => ''
-	// 		];
-	// 		$this->session->set_flashdata('success', 'BERHASIL! Penjualan Terhapus');
-	// 		echo json_encode($response);
-	// 	}
-	// 	else
-	// 	{
-	// 		$this->load->view('auth/show_404');
-	// 	}								
-	// }
 
     public function print_sales_invoice_non($sales_invoice_id)
 	{
@@ -3869,7 +3749,6 @@ class Sales extends System_Controller
 		{
 			$sales_invoice_id = $this->global->decrypt($sales_invoice_id);			
 			$sales_invoice    = $this->sales->get_detail_sales_invoice($sales_invoice_id);
-			$payment = ($sales_invoice['payment'] == 1) ? 'TUNAI' : 'KREDIT';
 			$data = array(
 				'perusahaan'	=> $this->global->company(),
 				'sales_invoice' => $sales_invoice,
@@ -3880,94 +3759,74 @@ class Sales extends System_Controller
 					'orientation' => 'P',
 					'margin_left' => 5,
 					'margin_right' => 5,
-					'margin_top' => 25,
-					'margin_bottom' => 25,
+					'margin_top' => 20,
+					'margin_bottom' => 30,
 					'margin_header' => 7,
 					'margin_footer' => 5,
-                    // 'setAutoBottomMargin' => 'stretch'
+                    'setAutoBottomMargin' => 'stretch'
                 ]);
             $mpdf->SetHTMLHeader('
-                <div style="font-size:14px;">
-                    B | BUKTI TITIPAN | NO. '.$sales_invoice['invoice'].'
+                <div style="font-weight: bold; font-size:12px;">
+                    NOTA PENJUALAN
                 </div>
-                <table style="width:100%; font-size:13px;">
+                <table style="width:100%; font-size:12px;">
                     <tbody>
                         <tr>
-							<td width="17%">TGL. TRANSAKSI</td>
-							<td width="20%">: '.date('d-m-Y', strtotime($sales_invoice['date'])).'</td>
-							<td width="5%">Sales</td>
-							<td>: '.$sales_invoice['name_s'].'</td>
-							<td width="10%">Pelanggan</td>
-							<td>: '.$sales_invoice['name_c'].'</td>
+                            <td width="12%">Tgl. Transaksi</td>
+                            <td width="20%">: '.date('d-m-Y', strtotime($sales_invoice['date'])).'</td>
+                            <td>Sales</td>
+                            <td width="20%">:'.$sales_invoice['name_s'].'</td>
+                            <td>Pelanggan</td>
+                            <td>: '.$sales_invoice['code_c'].' | '.$sales_invoice['name_c'].'</td>
                         </tr>
                         <tr>
-							<td>JTH. TEMPO ('.$sales_invoice['payment_due'].') Hari</td>
-							<td>: '.$payment.' | '.date('d-m-Y', strtotime($sales_invoice['due_date'])).'</td>
-							<td>OPT</td>
-							<td>: '.$sales_invoice['name_e'].'</td>
-							<td>Alamat</td>
-							<td>: '.$sales_invoice['address_c'].'</td>
+                            <td>No. Transaksi</td>
+                            <td>: '.$sales_invoice['invoice'].'</td>
+                            <td>Operator</td>
+                            <td>: '.$sales_invoice['name_e'].'</td>
+                            <td>Alamat</td>
+                            <td>: '.$sales_invoice['address_c'].'</td>
                         </tr>
                     </tbody>
                 </table>
             ');
-            $mpdf->SetHTMLFooter(
-                '<table style="width:100%; text-align:center;" border="0">
-                    <tr>
-                        <td>HORMAT KAMI</td>
-                        <td>CHECKER</td>
-                        <td>PENERIMA</td>
-                        <td><small>(barang dianggap sebagai titipan apabila belum lunas)</small></td>
-                    </tr>
-                    <tr>
-                        <td style="height:35px;">&nbsp;</td>
-                    </tr>
-                    <tr>
-                        <td><p>(___________________________)</p></td>
-                        <td><p>(___________________________)</p></td>
-                        <td><p>(___________________________)</p></td>
-                    </tr>
-                    <tr>
-                        <td style="height:5px;">&nbsp;</td>
-                    </tr>
-                </table>
+            $mpdf->SetHTMLFooter('
                 <table width="100%">
-                <tr>
-                    <td><small>Waktu Cetak: '.date('d-m-Y H:i:s').' | Opt. '.$this->session->userdata('name_e').'</small></td>
-                    <td align="center">{PAGENO}/{nbpg}</td>
-                </tr>
+                    <tr>
+                        <td><small>Waktu Cetak: '.date('d-m-Y H:i:s').' | Opt. '.$this->session->userdata('name_e').'</small></td>
+                        <td align="center">{PAGENO}/{nbpg}</td>
+                    </tr>
                 </table>'
             );
-            // $mpdf->DefHTMLFooterByName(
-            //       'LastPageFooter',
-            //       '
-            //         <table style="width:100%; text-align:center;" border="0">
-            //             <tr>
-            //                 <td>HORMAT KAMI</td>
-            //                 <td>CHECKER</td>
-            //                 <td>PENERIMA</td>
-            //                 <td style="font-size:12px;"><small>(barang dianggap sebagai titipan apabila belum lunas)</small></td>
-            //             </tr>
-            //             <tr>
-            //                 <td style="height:35px;">&nbsp;</td>
-            //             </tr>
-            //             <tr>
-            //                 <td><p>(___________________________)</p></td>
-            //                 <td><p>(___________________________)</p></td>
-            //                 <td><p>(___________________________)</p></td>
-            //             </tr>
-            //             <tr>
-            //                 <td style="height:5px;">&nbsp;</td>
-            //             </tr>
-            //         </table>
-            //         <table width="100%">
-            //             <tr>
-            //                 <td><small>Waktu Cetak: '.date('d-m-Y H:i:s').' | Opt. '.$this->session->userdata('name_e').'</small></td>
-            //                 <td align="center">{PAGENO}/{nbpg}</td>
-            //             </tr>
-            //         </table>
-            //       '
-            // );
+            $mpdf->DefHTMLFooterByName(
+                  'LastPageFooter',
+                  '
+                    <table style="width:25%; text-align:center;" border="0">
+                        <tr>
+                            <td>ADMIN</td>
+                            <td>GUDANG</td>
+                            <td>PENERIMA</td>
+                        </tr>
+                        <tr>
+                            <td style="height:50px;">&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td><p>(___________________________)</p></td>
+                            <td><p>(___________________________)</p></td>
+                            <td><p>(___________________________)</p></td>
+                        </tr>
+                        <tr>
+                            <td style="height:5px;">&nbsp;</td>
+                        </tr>
+                    </table>
+                    <table width="100%">
+                        <tr>
+                            <td><small>Waktu Cetak: '.date('d-m-Y H:i:s').' | Opt. '.$this->session->userdata('name_e').'</small></td>
+                            <td align="center">{PAGENO}/{nbpg}</td>
+                        </tr>
+                    </table>
+                  '
+            );
 			$data = $this->load->view('sales/invoice/print_sales_invoice_non', $data, true);
 			$mpdf->WriteHTML($data);
 			$mpdf->Output();

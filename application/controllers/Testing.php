@@ -13,17 +13,65 @@ class Testing extends System_Controller
         }                
 	}
 	
+	public function fix_product_unit()
+	{
+		// PURCHASE INVOICE DETAIL
+		$purchase_invoice_detail = $this->crud->get_where('purchase_invoice_detail', ['deleted' => 0])->result_array();
+		foreach($purchase_invoice_detail AS $info_purchase_invoice_detail)
+		{
+			$where_product_unit = [
+				'product_code' => $info_purchase_invoice_detail['product_code'],
+				'unit_id'	 => $info_purchase_invoice_detail['unit_id'],
+				'deleted' => 0				
+			];
+			$product_unit = $this->crud->get_where('product_unit', $where_product_unit)->row_array();
+			if($product_unit != null)
+			{
+				$this->crud->update('purchase_invoice_detail', ['unit_value' => $product_unit['value']], ['id' => $info_purchase_invoice_detail['id']]);
+			}
+		}
+
+		// SALES INVOICE DETAIL
+		$sales_invoice_detail = $this->crud->get_where('sales_invoice_detail', ['deleted' => 0])->result_array();
+		foreach($sales_invoice_detail AS $info_sales_invoice_detail)
+		{
+			$where_product_unit = [
+				'product_code' => $info_sales_invoice_detail['product_code'],
+				'unit_id'	 => $info_sales_invoice_detail['unit_id'],
+				'deleted' => 0				
+			];
+			$product_unit = $this->crud->get_where('product_unit', $where_product_unit)->row_array();
+			if($product_unit != null)
+			{
+				$this->crud->update('sales_invoice_detail', ['unit_value' => $product_unit['value']], ['id' => $info_sales_invoice_detail['id']]);
+			}
+		}
+
+		// SALES RETURN DETAIL
+		$sales_return_detail = $this->crud->get_where('sales_return_detail', ['deleted' => 0])->result_array();
+		foreach($sales_return_detail AS $info_sales_return_detail)
+		{
+			$where_product_unit = [
+				'product_code' => $info_sales_return_detail['product_code'],
+				'unit_id'	 => $info_sales_return_detail['unit_id'],
+				'deleted' => 0				
+			];
+			$product_unit = $this->crud->get_where('product_unit', $where_product_unit)->row_array();
+			if($product_unit != null)
+			{
+				$this->crud->update('sales_return_detail', ['unit_value' => $product_unit['value']], ['id' => $info_sales_return_detail['id']]);
+			}
+		}
+
+		echo "SINKRONASI SATUAN PRODUK BERHASIL";
+	}
+	
 	function testing_date_diff()
 	{
 		$start = strtotime("02-03-2023");
 		$end   = strtotime("16-03-2023");
 		$diff  = $start - $end;
 		echo json_encode(floor($diff / (60 * 60 * 24)));
-	}
-
-	public function sync_product_unit_purchase_invoice_detail()
-	{
-		
 	}
 	
 	public function checking_sales_invoice()

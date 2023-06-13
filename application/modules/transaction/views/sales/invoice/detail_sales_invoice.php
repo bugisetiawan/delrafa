@@ -86,16 +86,14 @@
                             </button>
                             <?php endif; ?>
                             <?php if($sales_invoice['ppn']==1): ?>
-                            <a href="<?php echo site_url('transaction/Sales/print_sales_invoice_ppn/'. $this->global->encrypt($sales_invoice['id'])); ?>" target="_blank" class="btn btn-outline-success btn-elevate"
+                            <a href="<?php echo site_url('transaction/Sales/print_sales_invoice_ppn/'. $this->global->encrypt($sales_invoice['id'])); ?>" target="_blank" class="btn btn-icon btn-outline-success btn-elevate"
                                 data-id="<?php echo $sales_invoice['id']; ?>" data-container="body" data-toggle="kt-tooltip" data-placement="left" data-skin="dark" title="Cetak Penjualan">
                             <i class="fa fa-print"></i>
-                            Penjualan
                             </a>
                             <?php else: ?>
-                            <a href="<?php echo site_url('transaction/Sales/print_sales_invoice_non/'. $this->global->encrypt($sales_invoice['id'])); ?>" target="_blank" class="btn btn-outline-success btn-elevate"
+                            <a href="<?php echo site_url('transaction/Sales/print_sales_invoice_non/'. $this->global->encrypt($sales_invoice['id'])); ?>" target="_blank" class="btn btn-icon btn-outline-success btn-elevate"
                                 data-id="<?php echo $sales_invoice['id']; ?>" data-container="body" data-toggle="kt-tooltip" data-placement="left" data-skin="dark" title="Cetak Penjualan">
-                            <i class="fa fa-print"></i>
-                            Penjualan
+                                <i class="fa fa-print"></i>
                             </a>
                             <?php endif; ?>
                         </div>
